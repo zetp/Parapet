@@ -1,1 +1,5 @@
 # Parapet
+
+This apple script was written in 2008 as a result of discussion in one of apple user group forums. The idea was to have new functionality concerning window size which was lacking in the Finder. The idea was to have each Finder window (and each newly opened window) to have predefined size chosen by user. However the user should be able to change window size afterwards if he/she chooses to do so.
+
+The script should be saved as app with option to stay open (such app is present in this repository). On launch it will open new window which user can resize to set up the desired size of windows (via "Get window size" button). Then when "Start" button is pressed the script will work in the background. It will set all open Finder window sizes to desired size as well as any new window. But it will do it only once for each window so user can still resize it if she/he desires.
