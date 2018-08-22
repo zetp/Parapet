@@ -1,0 +1,174 @@
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-style: italic">(*</span>
+<span style="color: #008800; font-style: italic">This apple script was written in 2008 as a result of discussion in one of apple user group forums. The idea was to have new functionality concerning window size which was lacking in the Finder. The idea was to have each Finder window (and each newly opened window) to have predefined size chosen by user. However the user should be able to change window size afterwards if he/she chooses to do so.</span>
+
+<span style="color: #008800; font-style: italic">The script should be saved as app with option to stay open. On launch it will open new window which user can resize to set up the desired size of windows (via &quot;Get window size&quot; button). Then when &quot;Start&quot; button is pressed the script will work in the background. It will set all open Finder window sizes to desired size as well as any new window. But it will do it only once for each window so user can still resize it if she/he desires.</span>
+<span style="color: #008800; font-style: italic">*)</span>
+
+<span style="color: #000080; font-weight: bold">property</span> lista_okien : {}
+<span style="color: #000080; font-weight: bold">property</span> lista_okien2 : {}
+<span style="color: #000080; font-weight: bold">property</span> lista_temp : {}
+<span style="color: #000080; font-weight: bold">property</span> guzik : <span style="color: #0000FF">&quot;&quot;</span>
+<span style="color: #000080; font-weight: bold">property</span> loop : <span style="color: #0000FF">0</span>
+<span style="color: #000080; font-weight: bold">property</span> wys : <span style="color: #0000FF">0</span>
+<span style="color: #000080; font-weight: bold">property</span> szer : <span style="color: #0000FF">0</span>
+
+<span style="color: #000080; font-weight: bold">on</span> run
+	
+	<span style="color: #000080; font-weight: bold">repeat</span> <span style="color: #000080; font-weight: bold">until</span> loop = <span style="color: #0000FF">1</span>
+		<span style="color: #000080; font-weight: bold">try</span>
+			<span style="color: #000080; font-weight: bold">tell</span> application <span style="color: #0000FF">&quot;Finder&quot;</span>
+				make new Finder <span style="color: #FF0000">window</span>
+				<span style="color: #000080; font-weight: bold">set</span> window_ID <span style="color: #000080; font-weight: bold">to</span> <span style="color: #FF0000">id</span> <span style="color: #000080; font-weight: bold">of</span> <span style="color: #FF0000">window</span> <span style="color: #0000FF">1</span>
+				<span style="color: #000080; font-weight: bold">set</span> <span style="color: #FF0000">toolbar</span> <span style="color: #FF0000">visible</span> <span style="color: #000080; font-weight: bold">of</span> the <span style="color: #FF0000">window</span> <span style="color: #FF0000">id</span> window_ID <span style="color: #000080; font-weight: bold">to</span> true
+				<span style="color: #000080; font-weight: bold">set</span> statusbar <span style="color: #FF0000">visible</span> <span style="color: #000080; font-weight: bold">of</span> the <span style="color: #FF0000">window</span> <span style="color: #FF0000">id</span> window_ID <span style="color: #000080; font-weight: bold">to</span> true
+				<span style="color: #000080; font-weight: bold">set</span> {a, b, c, d} <span style="color: #000080; font-weight: bold">to</span> <span style="color: #FF0000">bounds</span> <span style="color: #000080; font-weight: bold">of</span> <span style="color: #FF0000">window</span> <span style="color: #FF0000">id</span> window_ID
+				<span style="color: #000080; font-weight: bold">set</span> szerokosc <span style="color: #000080; font-weight: bold">to</span> (c - a)
+				<span style="color: #000080; font-weight: bold">set</span> wysokosc <span style="color: #000080; font-weight: bold">to</span> (d - b)
+			<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">tell</span>
+			<span style="color: #000080; font-weight: bold">set</span> loop <span style="color: #000080; font-weight: bold">to</span> <span style="color: #0000FF">1</span>
+		on <span style="color: #000080; font-weight: bold">error</span>
+			<span style="color: #000080; font-weight: bold">set</span> loop <span style="color: #000080; font-weight: bold">to</span> <span style="color: #0000FF">0</span>
+			delay <span style="color: #0000FF">0.5</span>
+		<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">try</span>
+	<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">repeat</span>
+	<span style="color: #000080; font-weight: bold">set</span> loop <span style="color: #000080; font-weight: bold">to</span> <span style="color: #0000FF">0</span>
+	
+	
+	<span style="color: #000080; font-weight: bold">set</span> guzik <span style="color: #000080; font-weight: bold">to</span> <span style="color: #0000FF">&quot;Get window size&quot;</span>
+	<span style="color: #000080; font-weight: bold">repeat</span> <span style="color: #000080; font-weight: bold">until</span> guzik <span style="font-weight: bold">is not</span> <span style="color: #0000FF">&quot;Get window size&quot;</span>
+		display dialog <span style="color: #0000FF">&quot;Set widow desired  size</span>
+<span style="color: #0000FF">		width: &quot;</span> &amp; szerokosc &amp; <span style="color: #0000FF">&quot; height: &quot;</span> &amp; wysokosc buttons {<span style="color: #0000FF">&quot;Quit&quot;</span>, <span style="color: #0000FF">&quot;Get window size&quot;</span>, <span style="color: #0000FF">&quot;Start&quot;</span>} with icon note with <span style="color: #FF0000">title</span> <span style="color: #0000FF">&quot;Parapet&quot;</span>
+		<span style="color: #000080; font-weight: bold">tell</span> result <span style="color: #000080; font-weight: bold">to</span> <span style="color: #000080; font-weight: bold">set</span> guzik <span style="color: #000080; font-weight: bold">to</span> <span style="color: #FF0000">button returned</span>
+		<span style="color: #000080; font-weight: bold">if</span> guzik <span style="font-weight: bold">is</span> <span style="color: #0000FF">&quot;Get window size&quot;</span> <span style="color: #000080; font-weight: bold">then</span>
+			<span style="color: #000080; font-weight: bold">try</span>
+				<span style="color: #000080; font-weight: bold">tell</span> application <span style="color: #0000FF">&quot;Finder&quot;</span>
+					<span style="color: #000080; font-weight: bold">set</span> {a, b, c, d} <span style="color: #000080; font-weight: bold">to</span> <span style="color: #FF0000">bounds</span> <span style="color: #000080; font-weight: bold">of</span> <span style="color: #FF0000">window</span> <span style="color: #FF0000">id</span> window_ID
+					<span style="color: #000080; font-weight: bold">set</span> szerokosc <span style="color: #000080; font-weight: bold">to</span> (c - a)
+					<span style="color: #000080; font-weight: bold">set</span> wysokosc <span style="color: #000080; font-weight: bold">to</span> (d - b)
+				<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">tell</span>
+			on <span style="color: #000080; font-weight: bold">error</span>
+				display dialog <span style="color: #0000FF">&quot;Hmm... looks like youhave closed the window or Finder is busy&quot;</span> buttons {<span style="color: #0000FF">&quot;Quit&quot;</span>} default button <span style="color: #0000FF">1</span> with icon note with <span style="color: #FF0000">title</span> <span style="color: #0000FF">&quot;Parapet&quot;</span>
+				<span style="color: #000080; font-weight: bold">set</span> guzik <span style="color: #000080; font-weight: bold">to</span> <span style="color: #0000FF">&quot;Quit&quot;</span>
+			<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">try</span>
+		<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">if</span>
+	<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">repeat</span>
+	
+	<span style="color: #000080; font-weight: bold">if</span> guzik <span style="font-weight: bold">is</span> <span style="color: #0000FF">&quot;Quit&quot;</span> <span style="color: #000080; font-weight: bold">then</span>
+		quit <span style="color: #000080; font-weight: bold">me</span> <span style="color: #008800; font-style: italic">-- koniec</span>
+		
+	<span style="color: #000080; font-weight: bold">else</span> <span style="color: #000080; font-weight: bold">if</span> guzik <span style="font-weight: bold">is</span> <span style="color: #0000FF">&quot;Start&quot;</span> <span style="color: #000080; font-weight: bold">then</span>
+		<span style="color: #000080; font-weight: bold">try</span>
+			<span style="color: #000080; font-weight: bold">tell</span> application <span style="color: #0000FF">&quot;Finder&quot;</span>
+				<span style="color: #000080; font-weight: bold">set</span> {a, b, c, d} <span style="color: #000080; font-weight: bold">to</span> <span style="color: #FF0000">bounds</span> <span style="color: #000080; font-weight: bold">of</span> <span style="color: #FF0000">window</span> <span style="color: #FF0000">id</span> window_ID
+				<span style="color: #000080; font-weight: bold">set</span> szerokosc <span style="color: #000080; font-weight: bold">to</span> (c - a)
+				<span style="color: #000080; font-weight: bold">set</span> wysokosc <span style="color: #000080; font-weight: bold">to</span> (d - b)
+			<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">tell</span>
+		on <span style="color: #000080; font-weight: bold">error</span>
+			display dialog <span style="color: #0000FF">&quot;Hmm... looks like youhave closed the window or Finder is busy&quot;</span> buttons {<span style="color: #0000FF">&quot;Quit&quot;</span>} default button <span style="color: #0000FF">1</span> with icon note with <span style="color: #FF0000">title</span> <span style="color: #0000FF">&quot;Parapet&quot;</span>
+			quit <span style="color: #000080; font-weight: bold">me</span>
+		<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">try</span>
+		<span style="color: #000080; font-weight: bold">set</span> wys <span style="color: #000080; font-weight: bold">to</span> wysokosc
+		<span style="color: #000080; font-weight: bold">set</span> szer <span style="color: #000080; font-weight: bold">to</span> szerokosc
+		
+		<span style="color: #008800; font-style: italic">--===pierwszy i ostatni raz===--</span>
+		<span style="color: #000080; font-weight: bold">repeat</span> <span style="color: #000080; font-weight: bold">until</span> loop = <span style="color: #0000FF">1</span>
+			<span style="color: #000080; font-weight: bold">try</span>
+				<span style="color: #000080; font-weight: bold">tell</span> application <span style="color: #0000FF">&quot;Finder&quot;</span>
+					<span style="color: #000080; font-weight: bold">set</span> lista_okien <span style="color: #000080; font-weight: bold">to</span> <span style="color: #FF0000">id</span> <span style="color: #000080; font-weight: bold">of</span> every <span style="color: #FF0000">window</span>
+				<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">tell</span>
+				<span style="color: #000080; font-weight: bold">set</span> loop <span style="color: #000080; font-weight: bold">to</span> <span style="color: #0000FF">1</span>
+			on <span style="color: #000080; font-weight: bold">error</span>
+				<span style="color: #000080; font-weight: bold">set</span> loop <span style="color: #000080; font-weight: bold">to</span> <span style="color: #0000FF">0</span>
+				delay <span style="color: #0000FF">0.5</span>
+			<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">try</span>
+		<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">repeat</span>
+		<span style="color: #000080; font-weight: bold">set</span> loop <span style="color: #000080; font-weight: bold">to</span> <span style="color: #0000FF">0</span>
+		
+		<span style="color: #000080; font-weight: bold">repeat</span> <span style="color: #000080; font-weight: bold">until</span> loop = <span style="color: #0000FF">1</span>
+			<span style="color: #000080; font-weight: bold">try</span>
+				<span style="color: #000080; font-weight: bold">tell</span> application <span style="color: #0000FF">&quot;Finder&quot;</span>
+					<span style="color: #000080; font-weight: bold">repeat</span> with i <span style="color: #000080; font-weight: bold">in</span> lista_okien
+						<span style="color: #000080; font-weight: bold">set</span> {a, b, c, d} <span style="color: #000080; font-weight: bold">to</span> <span style="color: #000080; font-weight: bold">get</span> <span style="color: #FF0000">bounds</span> <span style="color: #000080; font-weight: bold">of</span> <span style="color: #FF0000">window</span> <span style="color: #FF0000">id</span> i
+						<span style="color: #000080; font-weight: bold">if</span> (c - a) = szer <span style="font-weight: bold">and</span> (d - b) = wys <span style="color: #000080; font-weight: bold">then</span>
+						<span style="color: #000080; font-weight: bold">else</span>
+							<span style="color: #000080; font-weight: bold">set</span> c <span style="color: #000080; font-weight: bold">to</span> (c + (szer - (c - a)))
+							<span style="color: #000080; font-weight: bold">set</span> d <span style="color: #000080; font-weight: bold">to</span> (d + (wys - (d - b)))
+							<span style="color: #000080; font-weight: bold">set</span> the <span style="color: #FF0000">bounds</span> <span style="color: #000080; font-weight: bold">of</span> <span style="color: #FF0000">window</span> <span style="color: #FF0000">id</span> (i <span style="color: #000080; font-weight: bold">as</span> integer) <span style="color: #000080; font-weight: bold">to</span> {a <span style="color: #000080; font-weight: bold">as</span> integer, b <span style="color: #000080; font-weight: bold">as</span> integer, c <span style="color: #000080; font-weight: bold">as</span> integer, d <span style="color: #000080; font-weight: bold">as</span> integer}
+						<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">if</span>
+					<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">repeat</span>
+				<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">tell</span>
+				<span style="color: #000080; font-weight: bold">set</span> loop <span style="color: #000080; font-weight: bold">to</span> <span style="color: #0000FF">1</span>
+			on <span style="color: #000080; font-weight: bold">error</span>
+				<span style="color: #000080; font-weight: bold">set</span> loop <span style="color: #000080; font-weight: bold">to</span> <span style="color: #0000FF">0</span>
+				delay <span style="color: #0000FF">0.5</span>
+			<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">try</span>
+		<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">repeat</span>
+		<span style="color: #000080; font-weight: bold">set</span> loop <span style="color: #000080; font-weight: bold">to</span> <span style="color: #0000FF">0</span>
+	<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">if</span>
+	<span style="color: #008800; font-style: italic">--===/pierwszy i ostatni raz===--</span>
+<span style="color: #000080; font-weight: bold">end</span> run
+
+
+<span style="color: #000080; font-weight: bold">on </span>idle
+	<span style="color: #008800; font-style: italic">-- ===pętla=== --</span>
+	<span style="color: #000080; font-weight: bold">repeat</span> <span style="color: #000080; font-weight: bold">until</span> loop = <span style="color: #0000FF">1</span>
+		<span style="color: #000080; font-weight: bold">try</span>
+			<span style="color: #000080; font-weight: bold">tell</span> application <span style="color: #0000FF">&quot;Finder&quot;</span>
+				<span style="color: #000080; font-weight: bold">set</span> lista_okien2 <span style="color: #000080; font-weight: bold">to</span> <span style="color: #FF0000">id</span> <span style="color: #000080; font-weight: bold">of</span> every <span style="color: #FF0000">window</span>
+			<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">tell</span>
+			<span style="color: #000080; font-weight: bold">set</span> loop <span style="color: #000080; font-weight: bold">to</span> <span style="color: #0000FF">1</span>
+		on <span style="color: #000080; font-weight: bold">error</span>
+			<span style="color: #000080; font-weight: bold">set</span> loop <span style="color: #000080; font-weight: bold">to</span> <span style="color: #0000FF">0</span>
+			delay <span style="color: #0000FF">0.5</span>
+		<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">try</span>
+	<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">repeat</span>
+	<span style="color: #000080; font-weight: bold">set</span> loop <span style="color: #000080; font-weight: bold">to</span> <span style="color: #0000FF">0</span>
+	
+	<span style="color: #000080; font-weight: bold">if</span> lista_okien = lista_okien2 <span style="color: #000080; font-weight: bold">then</span> <span style="color: #008800; font-style: italic">-- jeśli listy są takie same nie rób nic</span>
+		<span style="color: #008800; font-style: italic">-- nic</span>
+	<span style="color: #000080; font-weight: bold">else</span>
+		<span style="color: #000080; font-weight: bold">repeat</span> <span style="color: #000080; font-weight: bold">until</span> loop = <span style="color: #0000FF">1</span>
+			<span style="color: #000080; font-weight: bold">try</span>
+				<span style="color: #000080; font-weight: bold">tell</span> application <span style="color: #0000FF">&quot;Finder&quot;</span>
+					<span style="color: #000080; font-weight: bold">repeat</span> with i <span style="color: #000080; font-weight: bold">in</span> lista_okien2
+						<span style="color: #000080; font-weight: bold">if</span> <span style="font-weight: bold">not</span> (i <span style="font-weight: bold">is in</span> lista_okien) <span style="color: #000080; font-weight: bold">then</span> <span style="color: #008800; font-style: italic">-- porównanie nowa lista do starej</span>
+							<span style="color: #008800; font-style: italic">-- jeśli nie ma </span>
+							<span style="color: #000080; font-weight: bold">set</span> the <span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">of</span> lista_okien <span style="color: #000080; font-weight: bold">to</span> (i <span style="color: #000080; font-weight: bold">as</span> integer) <span style="color: #008800; font-style: italic">-- to dodać je do lista_okien</span>
+							<span style="color: #000080; font-weight: bold">set</span> {a, b, c, d} <span style="color: #000080; font-weight: bold">to</span> <span style="color: #000080; font-weight: bold">get</span> <span style="color: #FF0000">bounds</span> <span style="color: #000080; font-weight: bold">of</span> <span style="color: #FF0000">window</span> <span style="color: #FF0000">id</span> i <span style="color: #008800; font-style: italic">-- i je dopasować do wymiarów</span>
+							<span style="color: #000080; font-weight: bold">if</span> (c - a) = szer <span style="font-weight: bold">and</span> (d - b) = wys <span style="color: #000080; font-weight: bold">then</span> <span style="color: #008800; font-style: italic">-- jeśli wymiary są dobre robić nic</span>
+								<span style="color: #008800; font-style: italic">-- nic</span>
+							<span style="color: #000080; font-weight: bold">else</span>
+								<span style="color: #000080; font-weight: bold">set</span> c <span style="color: #000080; font-weight: bold">to</span> (c + (szer - (c - a)))
+								<span style="color: #000080; font-weight: bold">set</span> d <span style="color: #000080; font-weight: bold">to</span> (d + (wys - (d - b)))
+								<span style="color: #000080; font-weight: bold">set</span> the <span style="color: #FF0000">bounds</span> <span style="color: #000080; font-weight: bold">of</span> <span style="color: #FF0000">window</span> <span style="color: #FF0000">id</span> (i <span style="color: #000080; font-weight: bold">as</span> integer) <span style="color: #000080; font-weight: bold">to</span> {a <span style="color: #000080; font-weight: bold">as</span> integer, b <span style="color: #000080; font-weight: bold">as</span> integer, c <span style="color: #000080; font-weight: bold">as</span> integer, d <span style="color: #000080; font-weight: bold">as</span> integer}
+							<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">if</span>
+						<span style="color: #000080; font-weight: bold">else</span> <span style="color: #008800; font-style: italic">-- jeśli jest</span>
+							<span style="color: #008800; font-style: italic">-- nic</span>
+						<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">if</span>
+					<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">repeat</span>
+				<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">tell</span>
+				<span style="color: #000080; font-weight: bold">set</span> loop <span style="color: #000080; font-weight: bold">to</span> <span style="color: #0000FF">1</span>
+			on <span style="color: #000080; font-weight: bold">error</span>
+				<span style="color: #000080; font-weight: bold">set</span> loop <span style="color: #000080; font-weight: bold">to</span> <span style="color: #0000FF">0</span>
+				delay <span style="color: #0000FF">0.5</span>
+			<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">try</span>
+		<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">repeat</span>
+		<span style="color: #000080; font-weight: bold">set</span> loop <span style="color: #000080; font-weight: bold">to</span> <span style="color: #0000FF">0</span>
+		<span style="color: #008800; font-style: italic">----</span>
+		<span style="color: #000080; font-weight: bold">repeat</span> with i <span style="color: #000080; font-weight: bold">in</span> lista_okien
+			<span style="color: #000080; font-weight: bold">if</span> (i <span style="font-weight: bold">is in</span> lista_okien2) <span style="color: #000080; font-weight: bold">then</span> <span style="color: #008800; font-style: italic">-- porownanie stara lista do nowej</span>
+				<span style="color: #000080; font-weight: bold">set</span> the <span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">of</span> lista_temp <span style="color: #000080; font-weight: bold">to</span> (i <span style="color: #000080; font-weight: bold">as</span> integer) <span style="color: #008800; font-style: italic">-- jeśli jest zbudować listę temp	</span>
+			<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">if</span>
+		<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">repeat</span>
+		<span style="color: #000080; font-weight: bold">set</span> lista_okien <span style="color: #000080; font-weight: bold">to</span> lista_temp
+		<span style="color: #000080; font-weight: bold">set</span> lista_temp <span style="color: #000080; font-weight: bold">to</span> {}
+	<span style="color: #000080; font-weight: bold">end</span> <span style="color: #000080; font-weight: bold">if</span>
+	return <span style="color: #0000FF">1</span>
+<span style="color: #000080; font-weight: bold">end </span>idle
+<span style="color: #008800; font-style: italic">-- ===/pętla=== --</span>
+
+<span style="color: #000080; font-weight: bold">on</span> quit
+	<span style="color: #000080; font-weight: bold">continue</span> quit
+<span style="color: #000080; font-weight: bold">end</span> quit
+</pre></div>
+
